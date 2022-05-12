@@ -49,12 +49,6 @@ public class LevelManager : MonoBehaviour
             createplayer.AddVector3(item.Value.transform.position);
             createplayer.AddQuaternion(item.Value.transform.rotation);
             NetworkManager.Singleton.Server.Send(createplayer, fromClientID);
-
-            Message testreliable = Message.Create(MessageSendMode.reliable, Messages.STC.testing_r);
-            NetworkManager.Singleton.Server.Send(testreliable, fromClientID);
-
-            Message testunreliable = Message.Create(MessageSendMode.unreliable, Messages.STC.testing_ur);
-            NetworkManager.Singleton.Server.Send(testunreliable, fromClientID);
         }
     }
 }

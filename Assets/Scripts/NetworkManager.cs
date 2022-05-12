@@ -21,12 +21,12 @@ public class Messages
     // Server to client id's
     public enum STC : ushort
     {
-        auth_fail = 1,
+        sync_tick = 1,
+        auth_fail,
         auth_malformed,
         auth_success,
         create_player,
-        testing_r,
-        testing_ur
+        playermove,
     }
 
     // Client to sever id's
@@ -34,6 +34,7 @@ public class Messages
     {
         auth_attempt = 1,
         openworldloaded,
+        inputs,
     }
 }
 
@@ -61,6 +62,7 @@ public class NetworkManager : MonoBehaviour
     }
 
     public Server Server { get; private set; }
+    public uint CurrentTick { get; private set; } = 0;
     public Settings Settings { get; private set; }
 
     private void Start()
@@ -82,6 +84,13 @@ public class NetworkManager : MonoBehaviour
     private void FixedUpdate()
     {
         Server.Tick();
+
+        if (CurrentTick % 200 == 0)
+        {
+            SendSync();
+        }
+
+        CurrentTick++;
     }
 
     private void SetServerStatus(bool status)
@@ -113,6 +122,13 @@ public class NetworkManager : MonoBehaviour
             Debug.Log(r.status_code);
             Debug.Log(r.json_content);
         }
+    }
+
+    private void SendSync()
+    {
+        Message message = Message.Create(MessageSendMode.unreliable, Messages.STC.sync_tick);
+        message.AddUInt(CurrentTick);
+        Server.SendToAll(message);
     }
 
     private void PlayerConnected(object sender, ServerClientConnectedEventArgs e)

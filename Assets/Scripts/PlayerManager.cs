@@ -31,21 +31,31 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private GameObject PlayerPrefab;
     [SerializeField] private GameObject[] SpawnPoints;
 
-    public Dictionary<ushort, GameObject> Players = new Dictionary<ushort, GameObject>();
+    public Dictionary<ushort, Player> Players = new Dictionary<ushort, Player>();
 
     public void CreatePlayer(ushort ClientID, string Username)
     {
         // Getting a random spawn point
         Vector3 spawn_location = SpawnPoints[Random.Range(0, SpawnPoints.Length)].transform.position;
         // Creating the player gameobject
-        Players.Add(ClientID, Instantiate(PlayerPrefab, spawn_location, Quaternion.identity));
+        GameObject player = Instantiate(PlayerPrefab, spawn_location, Quaternion.identity);
+        Players.Add(ClientID, player.GetComponent<Player>());
         // Setting the ClientID and Username of the player gameobject
         Players[ClientID].GetComponent<Player>().SetPlayerInfo(ClientID, Username);
     }
 
     public void RemovePlayer(ushort ClientID)
     {
-        Destroy(Players[ClientID]);
+        Destroy(Players[ClientID].gameObject);
         Players.Remove(ClientID);
+    }
+
+    [MessageHandler((ushort)Messages.CTS.inputs)]
+    private static void Inputs(ushort fromClientID, Message message)
+    {
+        if (Singleton.Players.TryGetValue(fromClientID, out Player player))
+        {
+            player.playermove.SetInputs(message.GetBools(6), message.GetVector3());
+        }
     }
 }
