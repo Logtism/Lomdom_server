@@ -46,8 +46,23 @@ public class PlayerManager : MonoBehaviour
 
     public void RemovePlayer(ushort ClientID)
     {
+        Message message = Message.Create(MessageSendMode.reliable, Messages.STC.remove_player);
+        message.AddUShort(ClientID);
+        NetworkManager.Singleton.Server.SendToAll(message);
+
         Destroy(Players[ClientID].gameObject);
         Players.Remove(ClientID);
+
+    }
+
+    public void DeSpawnPlayer(ushort ClientID)
+    {
+        Players[ClientID].gameObject.SetActive(false);
+    }
+
+    public void ReSpawnPlayer(ushort ClientID)
+    {
+        Players[ClientID].gameObject.SetActive(true);
     }
 
     [MessageHandler((ushort)Messages.CTS.inputs)]

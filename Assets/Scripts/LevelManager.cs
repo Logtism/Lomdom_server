@@ -46,9 +46,17 @@ public class LevelManager : MonoBehaviour
         {
             Message createplayer = Message.Create(MessageSendMode.reliable, Messages.STC.create_player);
             createplayer.AddString(item.Value.GetComponent<Player>().Username);
+            createplayer.AddUShort(item.Value.GetComponent<Player>().ClientID);
             createplayer.AddVector3(item.Value.transform.position);
             createplayer.AddQuaternion(item.Value.transform.rotation);
-            NetworkManager.Singleton.Server.Send(createplayer, fromClientID);
+            if (item.Value.GetComponent<Player>().ClientID == fromClientID)
+            {
+                NetworkManager.Singleton.Server.SendToAll(createplayer);
+            }
+            else
+            {
+                NetworkManager.Singleton.Server.Send(createplayer, fromClientID);
+            }       
         }
     }
 }

@@ -47,6 +47,7 @@ public class AuthManager : MonoBehaviour
             {
                 // Tell the client authenticated and to load into the main scene
                 Message msg = Message.Create(MessageSendMode.reliable, Messages.STC.auth_success);
+                msg.AddUShort(fromClientID);
                 NetworkManager.Singleton.Server.Send(msg, fromClientID);
 
                 Debug.Log($"Player {fromClientID}:{username} authenticated");

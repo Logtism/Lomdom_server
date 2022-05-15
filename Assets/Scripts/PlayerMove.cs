@@ -101,7 +101,7 @@ public class PlayerMove : MonoBehaviour
             return;
         }
         Message message = Message.Create(MessageSendMode.unreliable, Messages.STC.playermove);
-        message.AddString(player.Username);
+        message.AddUShort(player.ClientID);
         message.AddUInt(NetworkManager.Singleton.CurrentTick);
         message.AddVector3(transform.position);
         message.AddVector3(camProxy.forward);
