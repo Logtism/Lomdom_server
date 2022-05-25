@@ -44,6 +44,9 @@ public class LevelManager : MonoBehaviour
     {
         foreach (var item in PlayerManager.Singleton.Players)
         {
+            Message sync_client_tick = Message.Create(MessageSendMode.reliable, Messages.STC.sync_tick);
+            sync_client_tick.AddUInt(NetworkManager.Singleton.CurrentTick);
+            NetworkManager.Singleton.Server.Send(sync_client_tick, fromClientID);
             Message createplayer = Message.Create(MessageSendMode.reliable, Messages.STC.create_player);
             createplayer.AddString(item.Value.GetComponent<Player>().Username);
             createplayer.AddUShort(item.Value.GetComponent<Player>().ClientID);
