@@ -8,11 +8,17 @@ public class Player : MonoBehaviour
 {
     public ushort ClientID;
     public string Username;
-    public int health { get; private set; }
-    public int maxhealth { get; private set; } = 100;
 
-    public int Weapon;
     public PlayerMove playermove;
+
+    private int Health;
+    private int MaxHealth = 100;
+
+    private Weapon ActiveWeapon;
+    private float LastShotTimer;
+    public uint CurrectAmmo;
+    private bool Reloading = false;
+    private float ReloadTimer;
 
     public void SetPlayerInfo(ushort ClientID, string Username)
     {
@@ -22,28 +28,82 @@ public class Player : MonoBehaviour
         playermove = gameObject.GetComponent<PlayerMove>();
     }
 
-    public void Damage(int amount)
+    private void Start()
     {
-        health -= amount;
-        if (health <= 0)
+        Health = MaxHealth;
+    }
+
+    private void Update()
+    {
+        if (ActiveWeapon && LastShotTimer < ActiveWeapon.RateOfFire)
         {
-            Kill();
+            LastShotTimer += Time.deltaTime;
+        }
+        if (ActiveWeapon && Reloading)
+        {
+            ReloadTimer += Time.deltaTime;
+            if (ReloadTimer >= ActiveWeapon.ReloadTime)
+            {
+                Reloading = false;
+                ReloadTimer = 0f;
+            }
         }
     }
 
-    private void Kill()
+    public void Damage(int amount)
     {
-        PlayerManager.Singleton.DeSpawnPlayer(ClientID);
-        Message message = Message.Create(MessageSendMode.reliable, Messages.STC.player_died);
-        message.AddString(Username);
-        NetworkManager.Singleton.Server.SendToAll(message);
+        Health -= amount;
+        if (Health <= 0)
+        {
+            PlayerManager.Singleton.DeSpawnPlayer(ClientID);
+        }
     }
 
-    private void Respawn()
+    public void SwitchWeapon(int weapon_id)
     {
-        PlayerManager.Singleton.ReSpawnPlayer(ClientID);
-        Message message = Message.Create(MessageSendMode.reliable, Messages.STC.player_respawn);
-        message.AddString(Username);
-        NetworkManager.Singleton.Server.SendToAll(message);
+        if (weapon_id == -1)
+        {
+            ActiveWeapon = null;
+            CurrectAmmo = 0;
+        }
+        else
+        {
+            ActiveWeapon = WeaponManger.Singleton.weapons[weapon_id];
+            CurrectAmmo = ActiveWeapon.MagCapacity;
+        }
+    }
+
+    public void Reload()
+    {
+        if (ActiveWeapon)
+        {
+            Reloading = true;
+        }
+    }
+
+    public void Attack(Vector3 rotation)
+    {
+        if (ActiveWeapon && !Reloading && CurrectAmmo > 0 && LastShotTimer >= ActiveWeapon.RateOfFire)
+        {
+            CurrectAmmo--;
+
+            RaycastHit hit;
+            // Debug.DrawRay(transform.position + rotation, rotation, Color.green, 100f); // Debug
+            bool raycast = Physics.Raycast(transform.position + rotation, rotation, out hit, ActiveWeapon.Range, WeaponManger.Singleton.ShootableMask);
+
+            if (raycast)
+            {
+                if (hit.collider.gameObject.CompareTag("Player"))
+                {
+                    hit.collider.gameObject.GetComponent<Player>().Damage(ActiveWeapon.Damage);
+                }
+                else if (hit.collider.gameObject.CompareTag("AI"))
+                {
+                    // Damage ai
+                    // Use the hit var to get the ai script on the ai (not added yet) and decrease the health.
+                }
+
+            }
+        }
     }
 }

@@ -57,12 +57,20 @@ public class PlayerManager : MonoBehaviour
 
     public void DeSpawnPlayer(ushort ClientID)
     {
+        Message message = Message.Create(MessageSendMode.reliable, Messages.STC.kill_player);
+        message.AddUShort(ClientID);
+        NetworkManager.Singleton.Server.SendToAll(message);
         Players[ClientID].gameObject.SetActive(false);
     }
 
     public void ReSpawnPlayer(ushort ClientID)
     {
         Players[ClientID].gameObject.SetActive(true);
+        // Should move the player to a respawn point or normal spawn point.
+        // The new position should be sent in the respawn msg below and that needs to be handled on the client.
+        Message message = Message.Create(MessageSendMode.reliable, Messages.STC.respawn_player);
+        message.AddUShort(ClientID);
+        NetworkManager.Singleton.Server.SendToAll(message);
     }
 
     [MessageHandler((ushort)Messages.CTS.inputs)]
