@@ -29,22 +29,6 @@ public class WeaponManger : MonoBehaviour
     [SerializeField] public Weapon[] weapons;
     [SerializeField] public LayerMask ShootableMask;
 
-    private void DamagePlayer(uint amount, ushort player)
-    {
-        Message message = Message.Create(MessageSendMode.reliable, Messages.STC.damage_player);
-        message.AddUShort(player);
-        message.AddUInt(amount);
-        NetworkManager.Singleton.Server.SendToAll(message);
-    }
-
-    private void DamageAI(uint amount, int ai)
-    {
-        Message message = Message.Create(MessageSendMode.reliable, Messages.STC.damage_player);
-        message.AddInt(ai);
-        message.AddUInt(amount);
-        NetworkManager.Singleton.Server.SendToAll(message);
-    }
-
     [MessageHandler((ushort)Messages.CTS.weapon_switch)]
     private static void WeaponSwitch(ushort fromClientID, Message message)
     {

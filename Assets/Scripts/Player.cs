@@ -95,7 +95,12 @@ public class Player : MonoBehaviour
             {
                 if (hit.collider.gameObject.CompareTag("Player"))
                 {
-                    hit.collider.gameObject.GetComponent<Player>().Damage(ActiveWeapon.Damage);
+                    Player hit_player = hit.collider.gameObject.GetComponent<Player>();
+                    hit_player.Damage(ActiveWeapon.Damage);
+                    // Update the health on the player that was damaged for ui.
+                    Message message = Message.Create(MessageSendMode.reliable, Messages.STC.damage_player);
+                    message.AddInt(hit_player.Health);
+                    NetworkManager.Singleton.Server.Send(message, hit_player.ClientID);
                 }
                 else if (hit.collider.gameObject.CompareTag("AI"))
                 {
