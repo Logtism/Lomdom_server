@@ -59,7 +59,11 @@ public class LevelManager : MonoBehaviour
             else
             {
                 NetworkManager.Singleton.Server.Send(createplayer, fromClientID);
-            }       
+            }
         }
+
+        Message update_money = Message.Create(MessageSendMode.reliable, Messages.STC.update_money);
+        update_money.AddFloat(PlayerManager.Singleton.Players[fromClientID].Balance);
+        NetworkManager.Singleton.Server.Send(update_money, fromClientID);
     }
 }

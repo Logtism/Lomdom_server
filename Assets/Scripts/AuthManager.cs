@@ -52,7 +52,7 @@ public class AuthManager : MonoBehaviour
 
                 Debug.Log($"Player {fromClientID}:{username} authenticated");
                 // Create the player
-                PlayerManager.Singleton.CreatePlayer(fromClientID, username);
+                PlayerManager.Singleton.CreatePlayer(fromClientID, username, (float)r.json_content["balance"]);
             }
             else
             {
