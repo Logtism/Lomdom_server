@@ -65,5 +65,8 @@ public class LevelManager : MonoBehaviour
         Message update_money = Message.Create(MessageSendMode.reliable, Messages.STC.update_money);
         update_money.AddFloat(PlayerManager.Singleton.Players[fromClientID].Balance);
         NetworkManager.Singleton.Server.Send(update_money, fromClientID);
+
+        AIManager.Singleton.SpawnWaypointAI(AiId.test_civ, new Vector3(0, 1.1f, 0), new Vector3(50, 1.1f, 0), false);
+        AIManager.Singleton.SpawnPatrol(AiId.test_civ, new Vector3(0, 1.1f, 0), new List<Vector3>() { new Vector3(45, 0, 45), new Vector3(-45, 0, -45) }, false);
     }
 }

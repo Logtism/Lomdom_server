@@ -4,11 +4,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using RiptideNetworking;
 
-[System.Serializable]
-public class MissionStart : UnityEvent { }
-[System.Serializable]
-public class MissionEnd : UnityEvent { }
-
 public class MissionManager : MonoBehaviour
 {
     private static MissionManager _singleton;
@@ -33,14 +28,14 @@ public class MissionManager : MonoBehaviour
     }
 
     [SerializeField] private Mission[] Missions;
-    private bool MissionActive;
+    public bool MissionActive;
 
     public bool StartMission(int mission_id)
     {   
         if (!MissionActive)
         {
             MissionActive = true;
-            Missions[mission_id].MissionStartFunction.Invoke();
+            Instantiate(Missions[mission_id].MissionPrefab);
             return true;
         }
         else

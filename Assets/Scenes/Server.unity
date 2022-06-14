@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: c2ce91bfc18099c44a92eec4b958e265, type: 2}
 --- !u!1 &492090553
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,7 +230,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &829474429
 BoxCollider:
@@ -417,6 +417,7 @@ GameObject:
   - component: {fileID: 1787013239}
   - component: {fileID: 1787013242}
   - component: {fileID: 1787013243}
+  - component: {fileID: 1787013244}
   m_Layer: 0
   m_Name: Server
   m_TagString: Untagged
@@ -507,6 +508,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Missions:
   - {fileID: 11400000, guid: 3f68837cc7d8fda4aa955e62e9ee6b0c, type: 2}
+  MissionActive: 0
 --- !u!114 &1787013243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -525,3 +527,18 @@ MonoBehaviour:
   ShootableMask:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &1787013244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787013236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19c42e64f1329204cb68fb77aaba5343, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxAmountOfAi: 30
+  Ais:
+  - {fileID: 11400000, guid: ab4d0d2acc6fe6e4aa10dbd5acce2378, type: 2}
