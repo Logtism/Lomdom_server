@@ -1,7 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.AI;
+
+
+public class KillEvent : UnityEvent { }
 
 public class AI : MonoBehaviour
 {
@@ -18,6 +22,8 @@ public class AI : MonoBehaviour
     private List<Vector3> PatrolPoints = new List<Vector3>();
 
     private int health = 100;
+
+    public KillEvent killEvent;
     public void SetInfoWaypoint(int id, AIInfo info, Vector3 waypoint)
     {
         ai_mode = AIMode.waypoint;
@@ -70,6 +76,10 @@ public class AI : MonoBehaviour
         health -= amount;
         if (health <= 0)
         {
+            if (killEvent != null)
+            {
+                killEvent.Invoke();
+            }
             AIManager.Singleton.KillAI(id);
         }
     }

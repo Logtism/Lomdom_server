@@ -47,6 +47,7 @@ public class Messages
         weapon_reload,
 
         mission_started,
+        mission_ended,
         mission_already_active,
     }
 

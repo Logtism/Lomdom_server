@@ -22,6 +22,7 @@ public enum AIMode
 public enum AiId : int
 {
     test_civ = 0,
+    Assassination_target,
 }
 
 public class AIManager : MonoBehaviour
@@ -79,7 +80,12 @@ public class AIManager : MonoBehaviour
         }
     }
 
-    public bool SpawnWaypointAI(AiId aiId, Vector3 SpawnPoint, Vector3 Waypoint, bool force)
+    public AI GetAI(int id)
+    {
+        return SpawnedAIs[id];
+    }
+
+    public (int? id, bool spawned) SpawnWaypointAI(AiId aiId, Vector3 SpawnPoint, Vector3 Waypoint, bool force)
     {
         if (MaxAmountOfAi > SpawnedAIs.Count || force)
         {
@@ -108,12 +114,12 @@ public class AIManager : MonoBehaviour
                 }
             }
             LastID++;
-            return true;
+            return (LastID - 1, true);
         }
-        return false;
+        return (null, false);
     }
 
-    public bool SpawnPatrol(AiId aiId, Vector3 SpawnPoint, List<Vector3> Points, bool force)
+    public (int? id, bool spawned) SpawnPatrol(AiId aiId, Vector3 SpawnPoint, List<Vector3> Points, bool force)
     {
         if (MaxAmountOfAi > SpawnedAIs.Count || force)
         {
@@ -142,22 +148,26 @@ public class AIManager : MonoBehaviour
                 }
             }
             LastID++;
-            return true;
+            return (LastID - 1, true);
         }
-        return false;
+        return (null, false);
     }
     public void KillAI(int id)
     {
-        AI ai = SpawnedAIs[id];
-        Destroy(ai.gameObject);
-        SpawnedAIs.Remove(id);
-        if (ai.info.Type == AIType.Civilian || ai.info.Type == AIType.DrivingCivilian)
+        AI ai;
+        SpawnedAIs.TryGetValue(id, out ai);
+        if (ai)
         {
-            SpawnedCivs.Remove(id);
+            Destroy(ai.gameObject);
+            SpawnedAIs.Remove(id);
+            if (ai.info.Type == AIType.Civilian || ai.info.Type == AIType.DrivingCivilian)
+            {
+                SpawnedCivs.Remove(id);
+            }
+            Message message = Message.Create(MessageSendMode.reliable, Messages.STC.kill_ai);
+            message.AddInt(id);
+            NetworkManager.Singleton.Server.SendToAll(message);
         }
-        Message message = Message.Create(MessageSendMode.reliable, Messages.STC.kill_ai);
-        message.AddInt(id);
-        NetworkManager.Singleton.Server.SendToAll(message);
     }
 
     private void Update()

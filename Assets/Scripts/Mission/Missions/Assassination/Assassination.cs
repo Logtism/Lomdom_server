@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RiptideNetworking;
 
 public class Assassination : MonoBehaviour
 {
@@ -25,11 +26,30 @@ public class Assassination : MonoBehaviour
         Singleton = this;
     }
 
-    [SerializeField] private Transform[] TargetSpawnLocations;
-    [SerializeField] private GameObject TargetPrefab;
+    [SerializeField] private AiId Target;
+    private int TargetAIId;
 
     private void Start()
     {
+        (int? id, bool spawned) ai = AIManager.Singleton.SpawnPatrol(
+            Target,
+            SpawnPoints.Singleton.GetRandomSpawnPoint(SpawnPoints.Singleton.AssassinationSpawnPoints),
+            SpawnPoints.Singleton.GetRandomPatrolRoute(SpawnPoints.Singleton.AssassinationPatrolRoutes),
+            true
+        );
+        if (ai.id != null)
+        {
+            TargetAIId = (int)ai.id;
+            KillEvent killEvent = new KillEvent();
+            killEvent.AddListener(AIKillEventHandler);
+            AIManager.Singleton.GetAI((int)ai.id).killEvent = killEvent;
+        }
+    }
 
+    private void AIKillEventHandler()
+    {
+        AIManager.Singleton.KillAI(TargetAIId);
+        MissionManager.Singleton.EndMission();
+        Destroy(gameObject);
     }
 }

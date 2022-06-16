@@ -44,6 +44,13 @@ public class MissionManager : MonoBehaviour
         }
     }
 
+    public void EndMission()
+    {
+        MissionActive = false;
+        Message message = Message.Create(MessageSendMode.reliable, Messages.STC.mission_ended);
+        NetworkManager.Singleton.Server.SendToAll(message);
+    }
+
     [MessageHandler((ushort)Messages.CTS.start_mission)]
     private static void StartMission(ushort fromClientID, Message message)
     {
