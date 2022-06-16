@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 9058436973342460023}
   - component: {fileID: 6225479081785286980}
   - component: {fileID: 826074682026898756}
-  m_Layer: 0
+  - component: {fileID: 9117040812079639052}
+  m_Layer: 6
   m_Name: test_civ
-  m_TagString: Untagged
+  m_TagString: AI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -68,6 +69,20 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
+--- !u!136 &9117040812079639052
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7530954246631402839}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8228408793338212535
 GameObject:
   m_ObjectHideFlags: 0

@@ -137,6 +137,8 @@ public class Player : MonoBehaviour
                 {
                     // Damage ai
                     // Use the hit var to get the ai script on the ai (not added yet) and decrease the health.
+                    AI hit_ai = hit.collider.gameObject.GetComponent<AI>();
+                    hit_ai.Damage(ActiveWeapon.Damage);
                 }
 
             }
