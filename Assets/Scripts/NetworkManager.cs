@@ -49,6 +49,9 @@ public class Messages
         mission_started,
         mission_ended,
         mission_already_active,
+
+        playerEnter_missionTrigger,
+        playerExit_missionTrigger,
     }
 
     // Client to sever id's
