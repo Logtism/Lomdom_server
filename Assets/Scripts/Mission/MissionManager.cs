@@ -29,6 +29,7 @@ public class MissionManager : MonoBehaviour
 
     [SerializeField] private Mission[] Missions;
     public bool MissionActive;
+    public Player StartedBy;
 
     public bool StartMission(int mission_id)
     {   
@@ -60,6 +61,7 @@ public class MissionManager : MonoBehaviour
             Message reply = Message.Create(MessageSendMode.reliable, Messages.STC.mission_started);
             reply.AddInt(mission_id);
             NetworkManager.Singleton.Server.SendToAll(reply);
+            Singleton.StartedBy = PlayerManager.Singleton.Players[fromClientID];
         }
         else
         {
