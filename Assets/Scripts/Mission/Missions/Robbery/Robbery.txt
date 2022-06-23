@@ -1,0 +1,6 @@
+Player starts robbery -
+Manager will find all robbery managers in scene, and pick one at random.
+If chosen robbery is on cooldown, then the manager will loop through the remaining robberies until it finds one that is not on cooldown.
+The manager will then wait for the player to travel to the location of the manager, and then will check for input specifically from 
+the player that started the robbery in a trigger (the player will hold a key for x seconds). After this the player will have to travel
+to another location, and upon entering the trigger at that location the robbery will finish.

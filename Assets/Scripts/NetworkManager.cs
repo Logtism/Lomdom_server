@@ -52,6 +52,9 @@ public class Messages
 
         playerEnter_missionTrigger,
         playerExit_missionTrigger,
+
+        playerEnter_RobberyTrigger,
+        playerExit_RobberyTrigger,
     }
 
     // Client to sever id's
@@ -67,6 +70,8 @@ public class Messages
         weapon_reload,
 
         start_mission,
+
+        completeRobbery_input,
     }
 }
 
