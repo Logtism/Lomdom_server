@@ -61,6 +61,8 @@ public class AIManager : MonoBehaviour
     private Dictionary<int, AI> SpawnedAIs = new Dictionary<int, AI>();
     private Dictionary<int, AI> SpawnedCivs = new Dictionary<int, AI>();
 
+    private uint LastUpdateTick;
+
     private void Start()
     {
         for (int i = 0; i <= Ais.Length - 1; ++i)
@@ -172,13 +174,18 @@ public class AIManager : MonoBehaviour
 
     private void Update()
     {
-        foreach(var item in SpawnedAIs)
+        if (NetworkManager.Singleton.CurrentTick % 20 == 0 && NetworkManager.Singleton.CurrentTick != LastUpdateTick)
         {
-            Message message = Message.Create(MessageSendMode.unreliable, Messages.STC.sync_ai_pos);
-            message.AddInt(item.Key);
-            message.AddUInt(NetworkManager.Singleton.CurrentTick);
-            message.AddVector3(item.Value.gameObject.transform.position);
-            NetworkManager.Singleton.Server.SendToAll(message);
+            Debug.Log(NetworkManager.Singleton.CurrentTick);
+            foreach (var item in SpawnedAIs)
+            {
+                Message message = Message.Create(MessageSendMode.unreliable, Messages.STC.sync_ai_pos);
+                message.AddInt(item.Key);
+                message.AddUInt(NetworkManager.Singleton.CurrentTick);
+                message.AddVector3(item.Value.gameObject.transform.position);
+                NetworkManager.Singleton.Server.SendToAll(message);
+            }
+            LastUpdateTick = NetworkManager.Singleton.CurrentTick;
         }
     }
 }
