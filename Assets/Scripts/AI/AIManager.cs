@@ -174,7 +174,7 @@ public class AIManager : MonoBehaviour
 
     private void Update()
     {
-        if (NetworkManager.Singleton.CurrentTick % 20 == 0 && NetworkManager.Singleton.CurrentTick != LastUpdateTick)
+        if (NetworkManager.Singleton.CurrentTick % 10 == 0 && NetworkManager.Singleton.CurrentTick != LastUpdateTick)
         {
             Debug.Log(NetworkManager.Singleton.CurrentTick);
             foreach (var item in SpawnedAIs)

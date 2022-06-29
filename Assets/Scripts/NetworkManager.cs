@@ -62,6 +62,7 @@ public class Messages
     {
         auth_attempt = 1,
         openworldloaded,
+        local_player_created,
 
         inputs,
 
