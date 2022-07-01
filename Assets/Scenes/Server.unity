@@ -1195,6 +1195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Missions:
   - {fileID: 11400000, guid: 3f68837cc7d8fda4aa955e62e9ee6b0c, type: 2}
+  - {fileID: 11400000, guid: 46dd4e7a67902d44499c61b348d10b01, type: 2}
   MissionActive: 0
   StartedBy: {fileID: 0}
 --- !u!114 &1787013243

@@ -29,12 +29,13 @@ public class Robbery : MonoBehaviour
     private void Awake()
     {
         Singleton = this;
-        clientID = MissionManager.Singleton.StartedBy.ClientID;
     }
 
     private void Start()
     {
         robberyManagers = GameObject.FindGameObjectsWithTag("RobberyManager");
+
+        clientID = MissionManager.Singleton.StartedBy.ClientID;
 
         for (int i = 0; i < robberyManagers.Length; i++)
         {
