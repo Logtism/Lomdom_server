@@ -6,6 +6,7 @@ TagManager:
   tags:
   - AI
   - RobberyManager
+  - RobberyManager_EndRobbery
   layers:
   - Default
   - TransparentFX
