@@ -61,9 +61,6 @@ public class LevelManager : MonoBehaviour
                 NetworkManager.Singleton.Server.Send(createplayer, fromClientID);
             }
         }
-
-        AIManager.Singleton.SpawnWaypointAI(AiId.test_civ, new Vector3(0, 1.1f, 0), new Vector3(50, 1.1f, 0), false);
-        AIManager.Singleton.SpawnPatrol(AiId.test_civ, new Vector3(0, 1.1f, 0), new List<Vector3>() { new Vector3(45, 0, 45), new Vector3(-45, 0, -45) }, false);
     }
 
     [MessageHandler((ushort)Messages.CTS.local_player_created)]
