@@ -90,18 +90,19 @@ public class Robbery : MonoBehaviour
     }
 
     [MessageHandler((ushort)Messages.CTS.completeRobbery_input)]
-    private static void OnPlayerCompleteRobberyInput(Message message)
+    private static void OnPlayerCompleteRobberyInput(ushort fromClientID, Message message)
     {
-        Singleton.completePhaseOne();
+        if (fromClientID == Singleton.clientID)
+        {
+            Singleton.completePhaseOne();
+            Debug.Log("completed phaseOne");
+        }
     }
 
     private void completePhaseOne()
     {
-        if (robberyPhase == 1)
-        {
-            robberyPhase = 2;
-            StartCoroutine(selectedRobberyManager.GetComponent<RobberyManager>().runRobberyCooldown());
-        }
+        StartCoroutine(selectedRobberyManager.GetComponent<RobberyManager>().runRobberyCooldown());
+        robberyPhase = 2;
     }
 
     public void completeRobbery()
