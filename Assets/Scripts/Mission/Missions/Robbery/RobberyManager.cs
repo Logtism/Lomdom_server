@@ -5,7 +5,7 @@ using RiptideNetworking;
 
 public class RobberyManager : MonoBehaviour
 {
-    public bool robberyOpen;
+    public bool robberyOpen = true;
     public bool playerCanDoRobbery;
     [SerializeField] private float robberyCooldownTime;
 
