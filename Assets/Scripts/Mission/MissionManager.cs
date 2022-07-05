@@ -70,4 +70,11 @@ public class MissionManager : MonoBehaviour
         }
 
     }
+
+    public void sendWaypoint(Vector3 waypointPosition, ushort clientID)
+    {
+        Message message = Message.Create(MessageSendMode.unreliable, Messages.STC.waypointUpdate);
+        message.AddVector3(waypointPosition);
+        NetworkManager.Singleton.Server.Send(message, clientID);
+    }
 }

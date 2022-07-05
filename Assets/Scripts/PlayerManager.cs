@@ -81,4 +81,10 @@ public class PlayerManager : MonoBehaviour
             player.playermove.SetInputs(message.GetBools(6), message.GetVector3());
         }
     }
+
+    [MessageHandler((ushort)Messages.CTS.playerClick_Respawn)]
+    private static void OnPlayerClickRespawn(ushort fromClientID, Message message)
+    {
+        Singleton.ReSpawnPlayer(fromClientID);
+    }
 }

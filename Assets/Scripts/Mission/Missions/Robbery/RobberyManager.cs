@@ -42,7 +42,7 @@ public class RobberyManager : MonoBehaviour
             }
         }
 
-        if (this.tag == "RobberyManager_EndRobbery" && robberyOpen)
+        if (this.tag == "RobberyManager_EndRobbery")
         {
             if (Robbery.Singleton != null)
             {

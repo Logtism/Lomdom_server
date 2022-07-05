@@ -55,6 +55,8 @@ public class Messages
 
         playerEnter_RobberyTrigger,
         playerExit_RobberyTrigger,
+
+        waypointUpdate,
     }
 
     // Client to sever id's
@@ -73,6 +75,8 @@ public class Messages
         start_mission,
 
         completeRobbery_input,
+
+        playerClick_Respawn,
     }
 }
 

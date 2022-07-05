@@ -86,6 +86,8 @@ public class Robbery : MonoBehaviour
         if (robberyPhase == 0)
         {
             robberyPhase = 1;
+
+            MissionManager.Singleton.sendWaypoint(selectedRobberyManager.transform.position, clientID);
         }
     }
 
@@ -103,6 +105,10 @@ public class Robbery : MonoBehaviour
     {
         StartCoroutine(selectedRobberyManager.GetComponent<RobberyManager>().runRobberyCooldown());
         robberyPhase = 2;
+
+        GameObject missionEndTrigger = GameObject.FindGameObjectWithTag("RobberyManager_EndRobbery");
+
+        MissionManager.Singleton.sendWaypoint(missionEndTrigger.transform.position, clientID);
     }
 
     public void completeRobbery()
