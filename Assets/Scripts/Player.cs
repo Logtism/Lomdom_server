@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     private int MaxHealth = 100;
 
     public float Balance = 0f;
+    public bool is_admin { get; private set; } = false;
 
     private Weapon ActiveWeapon;
     private float LastShotTimer;
@@ -23,11 +24,17 @@ public class Player : MonoBehaviour
     private bool Reloading = false;
     private float ReloadTimer;
 
-    public void SetPlayerInfo(ushort ClientID, string Username, float Balance)
+    public bool InVehicle = false;
+    public Vehicle vehicle;
+    public bool vehicle_driver;
+    private Vehicle CanEnterVehicle;
+
+    public void SetPlayerInfo(ushort ClientID, string Username, float Balance, bool is_admin)
     {
         this.ClientID = ClientID;
         this.Username = Username;
         this.Balance = Balance;
+        this.is_admin = is_admin;
         gameObject.name = $"Player - {ClientID}:{Username}";
         playermove = gameObject.GetComponent<PlayerMove>();
     }
@@ -141,6 +148,71 @@ public class Player : MonoBehaviour
                 }
 
             }
+        }
+    }
+
+    public void EnterVehicle()
+    {
+        if (!InVehicle && CanEnterVehicle)
+        {
+            (bool driver, bool passenger) EnterVehicle = VehicleManager.Singleton.GetVehicleFromID(CanEnterVehicle.id).Enter(ClientID);
+            if (EnterVehicle.driver)
+            {
+                InVehicle = true;
+                vehicle = CanEnterVehicle;
+                vehicle_driver = true;
+                // Move player cam and change movement to vehicle
+                Message message = Message.Create(MessageSendMode.reliable, Messages.STC.entered_vehicle_driver);
+                message.AddUShort(ClientID);
+                message.AddUInt(vehicle.id);
+                NetworkManager.Singleton.Server.SendToAll(message);
+            }
+            else if (EnterVehicle.passenger)
+            {
+                InVehicle = true;
+                vehicle = CanEnterVehicle;
+                vehicle_driver = false;
+                // Move player cam and disable movement
+                Message message = Message.Create(MessageSendMode.reliable, Messages.STC.entered_vehicle_passenger);
+                message.AddUShort(ClientID);
+                message.AddUInt(vehicle.id);
+                NetworkManager.Singleton.Server.SendToAll(message);
+            }
+        }
+    }
+
+    public void LeaveVehicle()
+    {
+        if (InVehicle)
+        {
+            vehicle.Leave(ClientID);
+
+            InVehicle = false;
+            vehicle_driver = false;
+            vehicle = null;
+
+            Message message = Message.Create(MessageSendMode.reliable, Messages.STC.left_vehicle);
+            message.AddUShort(ClientID);
+            NetworkManager.Singleton.Server.SendToAll(message);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("VehicleEnterRange"))
+        {
+            CanEnterVehicle = other.gameObject.GetComponentInParent<Vehicle>();
+            Debug.Log(CanEnterVehicle);
+            VehicleManager.Singleton.CanEnterVehicle(ClientID, CanEnterVehicle.id);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("VehicleEnterRange"))
+        {
+            CanEnterVehicle = null;
+            VehicleManager.Singleton.CannotEnterVehicle(ClientID, other.gameObject.GetComponentInParent<Vehicle>().id);
         }
     }
 }

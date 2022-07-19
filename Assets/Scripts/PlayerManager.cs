@@ -33,7 +33,7 @@ public class PlayerManager : MonoBehaviour
 
     public Dictionary<ushort, Player> Players = new Dictionary<ushort, Player>();
 
-    public void CreatePlayer(ushort ClientID, string Username, float balance)
+    public void CreatePlayer(ushort ClientID, string Username, float balance, bool is_admin)
     {
         // Getting a random spawn point
         Vector3 spawn_location = SpawnPoints[Random.Range(0, SpawnPoints.Length)].transform.position;
@@ -41,7 +41,7 @@ public class PlayerManager : MonoBehaviour
         GameObject player = Instantiate(PlayerPrefab, spawn_location, Quaternion.identity);
         Players.Add(ClientID, player.GetComponent<Player>());
         // Setting the ClientID and Username of the player gameobject
-        Players[ClientID].GetComponent<Player>().SetPlayerInfo(ClientID, Username, balance);
+        Players[ClientID].GetComponent<Player>().SetPlayerInfo(ClientID, Username, balance, is_admin);
     }
 
     public void RemovePlayer(ushort ClientID)
